@@ -1,7 +1,7 @@
 ﻿<!doctype html>
 <html>
 <head>
-    <title>FMETP STREAM: SocketIO Demo</title>
+    <title>Ponto Care</title>
     <script src="/socket.io/socket.io.js"></script>
     <script src="lib/gunzip.min.js"></script>
     <style>
@@ -22,9 +22,8 @@
         }
     </style>
 </head>
-<body>
-    <h2 style="text-align:center"> FMETP STREAM: FM WebSocket (Demo Receiver)</h2>
-    <table style="width:100%;">
+<body style="background-color: black;">
+    <table style="width:100%; display:none;">
         <tr>
             <th><span id="StatusTextConnection">Status: no connection</span></th>
             <th>IP Address <input type="text" id="IpAddress" value="http://localhost:3000"></th>
@@ -57,7 +56,6 @@
             <th><span id="StatusTextAudio">(kB) </span></th>
         </tr>
     </table>
-    </br>
 
     <img id="DisplayImg" src="" width=100% />
 
@@ -82,6 +80,42 @@
 
         var socket;
         var isServer;
+
+
+        (function() {
+    var params = {},
+        r = /([^&=]+)=?([^&]*)/g;
+
+    function d(s) {
+        return decodeURIComponent(s.replace(/\+/g, ' '));
+    }
+    var match, search = window.location.search;
+    while (match = r.exec(search.substring(1)))
+        params[d(match[1])] = d(match[2]);
+    window.params = params;
+
+    var paramsScreen = getSearchParameters();
+    console.log(`PARAMETER`, paramsScreen);
+
+    function getSearchParameters() {
+            var prmstr = window.location.search.substr(1);
+            return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
+            }
+
+            function transformToAssocArray( prmstr ) {
+                var params = {};
+                var prmarr = prmstr.split("&");
+                for ( var i = 0; i < prmarr.length; i++) {
+                    var tmparr = prmarr[i].split("=");
+                    params[tmparr[0]] = tmparr[1];
+                }
+                return params;
+            }
+
+            if(paramsScreen.start === "true"){
+                ConnectSocketIO(true);
+            }
+})();
 
         function ConnectAsServer()
         {
@@ -130,7 +164,7 @@
         function ConnectSocketIO(_regServer = false)
         {
             var IP = document.getElementById("IpAddress").value;
-            socket = io.connect(IP);
+            socket = io.connect(`http://52.168.37.7:3001`);
             //var socket = io.connect('http://localhost:3000');
 
             socket.on("connect", function (data)
