@@ -5,6 +5,8 @@ app.use(express.static(__dirname + '/public'));
 var http = require('http').createServer(app);
 // var io = require('socket.io')(http, {allowEIO3: true, allowEIO4: true, serveClient: true});
 
+var port = process.env.PORT || 8080;
+
 var io = require('socket.io')(http, {
   allowEIO3: true,
   allowEIO4: true,
@@ -12,7 +14,7 @@ var io = require('socket.io')(http, {
   cors: { origin: '*'}
 });
 
-http.listen(3000, function(){ console.log('listening on *:3000');});
+http.listen(port, function(){ console.log(`listening on *:${port}`);});
 
 var serverID = 'undefined';
 io.on('connection', function (socket){
