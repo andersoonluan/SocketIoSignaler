@@ -53,4 +53,9 @@ io.on('connection', function (socket){
             console.log('cannot find any active server');
         }
     });
+
+    socket.on('radio', function (blob){
+        console.log(`sending blob`);
+        socket.broadcast.emit('OnReceiveDataVoice', blob);
+    });
 });

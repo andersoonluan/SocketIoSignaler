@@ -22,11 +22,11 @@
         }
     </style>
 </head>
-<body style="background-color: black;">
+<body style="background-color: black; display:none">
     <table style="width:100%; display:none;">
         <tr>
             <th><span id="StatusTextConnection">Status: no connection</span></th>
-            <th>IP Address <input type="text" id="IpAddress" value="http://localhost:3000"></th>
+            <th>IP Address <input type="text" id="IpAddress" value="http://52.168.37.7:3001"></th>
             <th><button onclick="ConnectAsServer()"><Strong id="BtnServerText">Connect as Server</Strong></button></th>
             <th><button onclick="ConnectAsClient()"><Strong id="BtnClientText">Connect as Client</Strong></button></th>
         </tr>
@@ -165,8 +165,6 @@
         {
             var IP = document.getElementById("IpAddress").value;
             socket = io.connect(`http://52.168.37.7:3001`);
-            //var socket = io.connect('http://localhost:3000');
-
             socket.on("connect", function (data)
             {
                 if(_regServer) socket.emit('RegServerId');
