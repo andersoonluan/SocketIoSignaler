@@ -22,11 +22,11 @@
         }
     </style>
 </head>
-<body style="background-color: black; display:none">
-    <table style="width:100%; display:none;">
+<body style="background-color: black;">
+    <table style="width:100%;">
         <tr>
             <th><span id="StatusTextConnection">Status: no connection</span></th>
-            <th>IP Address <input type="text" id="IpAddress" value="http://52.168.37.7:3001"></th>
+            <th>IP Address <input type="text" id="IpAddress" value="https://audio-broadcast-hololens.herokuapp.com:12937"></th>
             <th><button onclick="ConnectAsServer()"><Strong id="BtnServerText">Connect as Server</Strong></button></th>
             <th><button onclick="ConnectAsClient()"><Strong id="BtnClientText">Connect as Client</Strong></button></th>
         </tr>
@@ -161,10 +161,48 @@
             }
         }
 
+        function ConnectAsAudio() {
+            socket = io.connect(window.location.origin);
+            var constraints = {
+                audio: true
+            };
+            navigator.mediaDevices.getUserMedia(constraints).then(function (mediaStream) {
+
+                console.log(`media`, mediaStream);
+                var mediaRecorder = new MediaRecorder(mediaStream);
+                mediaRecorder.onstart = function (e) {
+                    this.chunks = [];
+                };
+                mediaRecorder.ondataavailable = function (e) {
+                    this.chunks.push(e.data);
+                };
+                mediaRecorder.onstop = function (e) {
+                    var blob = new Blob(this.chunks, {
+                        'type': 'audio/ogg; codecs=opus'
+                    });
+                    socket.emit('radio', blob);
+                };
+
+                // Start recording
+                mediaRecorder.start();
+
+                console.log(`start`, mediaRecorder);
+
+
+                // Stop recording after 5 seconds and broadcast it to server
+                setInterval(function () {
+                    mediaRecorder.stop()
+                    mediaRecorder.start()
+                }, 2000);
+            });
+
+
+        }
+
         function ConnectSocketIO(_regServer = false)
         {
             var IP = document.getElementById("IpAddress").value;
-            socket = io.connect(`http://52.168.37.7:3001`);
+            socket = io.connect(window.location.origin);
             socket.on("connect", function (data)
             {
                 if(_regServer) socket.emit('RegServerId');
@@ -173,6 +211,17 @@
                 document.getElementById("BtnServerText").innerHTML = "disconnect";
                 document.getElementById("BtnClientText").innerHTML = "disconnect";
                 document.getElementById("StatusTextConnection").innerHTML = "Status" + (isServer ? "(server)" : "(client)") + ": " + "Connected";
+            });
+
+             // When the client receives a voice message it will play the sound
+             socket.on('OnReceiveDataVoice', function (arrayBuffer) {
+                var blob = new Blob([arrayBuffer], {
+                    'type': 'audio/ogg; codecs=opus'
+                });
+                console.log(`AUDIO BLOB`, blob);
+                var audio = document.createElement('audio');
+                audio.src = window.URL.createObjectURL(blob);
+                audio.play();
             });
 
             socket.on('OnReceiveData', function (data)
