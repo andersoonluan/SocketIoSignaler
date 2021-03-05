@@ -150,7 +150,6 @@
             socket = io.connect(window.location.origin);
             socket.on("connect", function (data) {
 
-                console.log(`DATA RECEBIDA NO CONNECT`);
                 if (_regServer) socket.emit('RegServerId');
                 isServer = _regServer;
 
@@ -224,7 +223,6 @@
 
             socket.on('OnReceiveData', function (data) {
 
-                console.log(`RECEBEU QUI`);
                 document.getElementById("StatusTextConnection").innerHTML = "Status" + (isServer ? "(server)" :
                         "(client)") + ": " + new Date().getHours() + ":" + new Date().getMinutes() + ":" +
                     new Date().getSeconds();
