@@ -56,8 +56,9 @@ io.on('connection', function (socket){
         }
     });
 
-    socket.on('radio', function (blob){
+    // if you want audio please use it | @andersoonluan
+    /* socket.on('radio', function (blob){
         console.log(`sending blob`);
         socket.broadcast.emit('OnReceiveDataVoice', blob);
-    });
+    }); */
 });
