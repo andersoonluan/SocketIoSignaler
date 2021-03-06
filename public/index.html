@@ -26,7 +26,7 @@
     <table style="width:100%;">
         <tr>
             <th><span id="StatusTextConnection">Status: no connection</span></th>
-            <th>IP Address <input type="text" id="IpAddress" value="https://audio-broadcast-hololens.herokuapp.com:12937"></th>
+            <th>IP Address <input type="text" id="IpAddress" value="https://signal-socket.azurewebsites.net:3000"></th>
             <th><button onclick="ConnectAsServer()"><Strong id="BtnServerText">Connect as Server</Strong></button></th>
             <th><button onclick="ConnectAsClient()"><Strong id="BtnClientText">Connect as Client</Strong></button></th>
         </tr>
@@ -201,6 +201,7 @@
 
         function ConnectSocketIO(_regServer = false)
         {
+            console.log(`CHECK ADDRESS: ${window.location.origin}`);
             var IP = document.getElementById("IpAddress").value;
             socket = io.connect(window.location.origin);
             socket.on("connect", function (data)
