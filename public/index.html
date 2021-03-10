@@ -168,7 +168,7 @@
         {
             console.log(`CHECK ADDRESS: ${window.location.origin}`);
             var IP = document.getElementById("IpAddress").value;
-            socket = io.connect(`http://52.168.37.7:3001`);
+            socket = io.connect(window.location.origin);
             socket.on("connect", function (data)
             {
                 if(_regServer) socket.emit('RegServerId');
