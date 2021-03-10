@@ -23,7 +23,7 @@
     </style>
 </head>
 <body>
-    <table style="width:100%;">
+    <table style="width:100%;" id="table_items">
         <tr>
             <th><span id="StatusTextConnection">Status: no connection</span></th>
             <th>IP Address <input type="text" id="IpAddress" value="https://signal-socket.azurewebsites.net:3000"></th>
@@ -113,6 +113,7 @@
             }
 
             if(paramsScreen.start === "true"){
+                document.getElementById("table_items").hidden = true;
                 ConnectSocketIO(true);
             }
 })();
@@ -161,49 +162,13 @@
             }
         }
 
-        function ConnectAsAudio() {
-            socket = io.connect(window.location.origin);
-            var constraints = {
-                audio: true
-            };
-            navigator.mediaDevices.getUserMedia(constraints).then(function (mediaStream) {
-
-                console.log(`media`, mediaStream);
-                var mediaRecorder = new MediaRecorder(mediaStream);
-                mediaRecorder.onstart = function (e) {
-                    this.chunks = [];
-                };
-                mediaRecorder.ondataavailable = function (e) {
-                    this.chunks.push(e.data);
-                };
-                mediaRecorder.onstop = function (e) {
-                    var blob = new Blob(this.chunks, {
-                        'type': 'audio/ogg; codecs=opus'
-                    });
-                    socket.emit('radio', blob);
-                };
-
-                // Start recording
-                mediaRecorder.start();
-
-                console.log(`start`, mediaRecorder);
-
-
-                // Stop recording after 5 seconds and broadcast it to server
-                setInterval(function () {
-                    mediaRecorder.stop()
-                    mediaRecorder.start()
-                }, 2000);
-            });
-
-
-        }
+     
 
         function ConnectSocketIO(_regServer = false)
         {
             console.log(`CHECK ADDRESS: ${window.location.origin}`);
             var IP = document.getElementById("IpAddress").value;
-            socket = io.connect(window.location.origin);
+            socket = io.connect(`http://52.168.37.7:3001`);
             socket.on("connect", function (data)
             {
                 if(_regServer) socket.emit('RegServerId');

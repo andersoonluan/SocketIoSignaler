@@ -24,7 +24,6 @@ io.on('connection', function (socket){
         serverID = socket.id;
         console.log('reg server id : ' + serverID);
     });
-
     socket.on('disconnect', function(){
         if (serverID == socket.id)
         {
@@ -55,10 +54,4 @@ io.on('connection', function (socket){
             console.log('cannot find any active server');
         }
     });
-
-    // if you want audio please use it | @andersoonluan
-    /* socket.on('radio', function (blob){
-        console.log(`sending blob`);
-        socket.broadcast.emit('OnReceiveDataVoice', blob);
-    }); */
 });
