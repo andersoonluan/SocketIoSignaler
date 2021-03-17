@@ -22,7 +22,7 @@
         }
     </style>
 </head>
-<body>
+<body style="background-color: black;" id="body_item">
     <table style="width:100%;" id="table_items">
         <tr>
             <th><span id="StatusTextConnection">Status: no connection</span></th>
@@ -115,6 +115,11 @@
             if(paramsScreen.start === "true"){
                 document.getElementById("table_items").hidden = true;
                 ConnectSocketIO(true);
+            }
+            else{
+                document.getElementById("table_items").hidden = false;
+                var body_ = document.getElementById("body_item");
+                body_.style.backgroundColor = "white";
             }
 })();
 
