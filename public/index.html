@@ -26,7 +26,7 @@
     <table style="width:100%;" id="table_items">
         <tr>
             <th><span id="StatusTextConnection">Status: no connection</span></th>
-            <th>IP Address <input type="text" id="IpAddress" value="https://stream.ponto.health:3001"></th>
+            <th>IP Address <input type="text" id="IpAddress" value="https://stream.ponto.health"></th>
             <th><button onclick="ConnectAsServer()"><Strong id="BtnServerText">Connect as Server</Strong></button></th>
             <th><button onclick="ConnectAsClient()"><Strong id="BtnClientText">Connect as Client</Strong></button></th>
         </tr>
@@ -172,7 +172,7 @@
         function ConnectSocketIO(_regServer = false)
         {
             var IP = document.getElementById("IpAddress").value;
-            socket = io.connect(`https://stream.ponto.health:3001`);
+            socket = io.connect(`https://stream.ponto.health`);
             socket.on("connect", function (data)
             {
                 if(_regServer) socket.emit('RegServerId');
